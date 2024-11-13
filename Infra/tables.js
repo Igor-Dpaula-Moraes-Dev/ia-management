@@ -1,11 +1,4 @@
 
-// class tabelas{
-//     init(pool){
-//         this.pool= pool;
-//     }
-
-//import { execute } from "../Infra/connection.js";
-//import connection from "../Infra/connection.js";
 import { execute } from "../Infra/connection.js";
 
     
