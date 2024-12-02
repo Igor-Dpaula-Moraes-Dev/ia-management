@@ -1,20 +1,36 @@
 import OpenAI from "openai";
 import { topicoID } from "../Controllers/topicosControllers.js";
+import dotenv from 'dotenv';
+dotenv.config();
 
-const openai = new OpenAI({
-    apiKey:process.env.API_KEY,
-    headers:{
-      Authorization: `Bearer ${process.env.API_KEY}`
+// const openai = new OpenAI({
+//     apiKey:process.env.API_KEY,
+//     headers:{
+//       Authorization: `Bearer ${process.env.API_KEY}`
+//     }
+//   }); 
+// Função para criar uma instância do cliente OpenAI dinamicamente
+function getOpenAiInstance(apiKey) {
+  if (!apiKey) {
+    throw new Error("API Key é obrigatória.");
+  }
+  return new OpenAI({
+    apiKey: apiKey,
+    headers: {
+      Authorization: `Bearer ${apiKey}` // Define o cabeçalho dinamicamente
     }
-  }); 
+  });
+}
 
-async function listaMessage() {
+async function listaMessage(topicoID,apiKey) {
   if (!topicoID) {
     console.error("ID do tópico não encontrado. Crie um tópico primeiro.");
     return { error: "ID do tópico não encontrado." };
   }
 
-  try{
+  try{            
+    const openai= getOpenAiInstance (apiKey)//cliente dinamico
+
     const threadMessages = await openai.beta.threads.messages.list(
     topicoID)
     console.log("Mensagens",threadMessages.data);
@@ -24,12 +40,12 @@ async function listaMessage() {
       role: mensagem.role,
       content: mensagem.content[0].text.value // Acessa o texto em `content[].text.value`
     }));
-    console.log(threadMessages);
+   // console.log(threadMessages);
     console.log(mensagensFormatadas);
     
     return mensagensFormatadas;
 
-   // return threadMessages.data;
+    //return threadMessages.data//extrai objeto com principais dados retornados pela api
   }catch (error){
     console.error("Erro ao listar mensagens", error);
     return {error: "Erro ao listar mensagens"};
@@ -38,12 +54,14 @@ async function listaMessage() {
 };
 
 
- async function criarMessage(topicoID,content){
+ async function criarMessage(topicoID,content ,apiKey){
+
   if (!topicoID) {
     throw new Error("ID do tópico não encontrado. Certifique-se de que o tópico foi criado.");
   }
 
   try{
+    const openai= getOpenAiInstance (apiKey)//cliente dinamico
      const threadMessages = await openai.beta.threads.messages.create(
     topicoID, 
     { role: "user", 
@@ -51,25 +69,21 @@ async function listaMessage() {
     }
   );
    console.log("Resposta da API",threadMessages);
-   const  respostaContent =  threadMessages?.data?.content?.[0].text?.value // Extrai `content.value`
+   const  perguntaContent =  threadMessages?.content?.[0]?.text?.value; // Extrai `content.value`
   // Extrai `content.value` da resposta da mensagem criada
+  console.log("console no conteudo da pergunta",perguntaContent)
   return { 
     message: "Mensagem criada com sucesso",
-    response: respostaContent
+    content: perguntaContent
   };
+
+  
 
   }catch(error){
     console.log("Erro ao criar mensagem",error);
     return { error: "Erro ao criar mensagem", details:error.message ||error }; // Retorna uma resposta de erro consistente
   }
 };
-async function apagarMensagem() {
-  const deletedMessage = await openai.beta.threads.messages.del(
-    "thread_abc123",
-    "msg_abc123"
-  );
 
-  console.log(deletedMessage);
-}
 
 export default {listaMessage,criarMessage};
