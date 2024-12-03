@@ -3,22 +3,17 @@ const{Router}= express;
 const rotaMessage = Router();
 import MensagensController from "../Controllers/messagesControllers.js";
 import topicosControllers from "../Controllers/topicosControllers.js";
+import verificaHeader from "../MiddleWares/validaCabecalho.js";
 
 
-rotaMessage.get("/:topicoID",async (req, res)=>{
+rotaMessage.get("/:topicoID", verificaHeader, async (req, res)=>{
     const {topicoID}= req.params;//obtem o topicoId atraves da url
-    const authorization = req.headers.authorization;
+    const apiKey = req.apiKey;//recuperaapikey do mo middleware
 
     if (!topicoID) {
         return res.status(400).json({ error: "O ID do tópico é obrigatório." });
       }
 
-    // Valida o cabeçalho de autorização
-    if (!authorization || !authorization.startsWith("Bearer ")) {
-    return res.status(400).json({ error: "API Key não fornecida ou inválida." });
-      }
-
-      const apiKey = authorization.replace("Bearer ", "").trim(); // Extrai a chave  
 
     try{
         const response = await MensagensController.listaMessage(topicoID,apiKey);
@@ -31,16 +26,12 @@ rotaMessage.get("/:topicoID",async (req, res)=>{
     
 });
 
-rotaMessage.post("/:topicoID",async (req, res)=>{
+rotaMessage.post("/:topicoID", verificaHeader, async (req, res)=>{
     const {topicoID}= req.params; // Obtém o `topicoID` da URL
     const {content, assistant_id}= req.body;//obtem o conteudo da mensagem do  corpo da requisição e o id da assistente
-    const authorization = req.headers.authorization;
+    const apiKey = req.apiKey;
 
-    if (!authorization || !authorization.startsWith("Bearer ")) {
-      return res.status(400).json({ error: "API Key não fornecida ou inválida." });
-    }
-  
-    const apiKey = authorization.replace("Bearer ", "").trim(); // Extrai a chave
+   
         
         if(!content){
             return res.status(400).json({error:"Conteudo da mensagem é necessario"});

@@ -3,6 +3,7 @@ import express from "express";
 const{Router}= express;
 const rota = Router();
 import topicosControllers, { topicoID } from "../Controllers/topicosControllers.js";
+import verificaHeader from "../MiddleWares/validaCabecalho.js";
 
 
 //GET BUSCAR TÓPICOS
@@ -19,23 +20,17 @@ rota.get("/", async (req, res)=>{
 })
 
 // POST - Criar um tópico
-rota.post("/", async (req, res)=>{
-    // Captura a API Key do cabeçalho Authorization
-  const authorization = req.headers.authorization;
-  if (!authorization || !authorization.startsWith("Bearer ")) {
-    return res.status(400).json({ error: "API Key não fornecida ou inválida no cabeçalho." });
-  }
-  const apiKey = authorization.split(" ")[1]; // Extrai a chave após "Bearer"
-    
-        const {content,assistant_id,} = req.body;
+rota.post("/", verificaHeader, async (req, res)=>{
+    try{
+         const {content,assistant_id,} = req.body;
+         const apiKey = req.apiKey//Recupera Middleware
+     
+       
          
         if(!assistant_id){
-            return res.status(400).json({erro:"Falta o Id da assistant_id"})
+            return res.status(400).json({erro:"Falta o Id da assistant_id"});
             } 
-        if(!apiKey){
-            return res.status(400).json({erro:"Chave de api key obrigatoria"})
-        } 
-            try{
+       
                 const response = await topicosControllers.criarTopico(content,assistant_id,apiKey);
                   console.log("Resposta da API:", JSON.stringify(response, null, 2)); // Log detalhado
                 
@@ -44,7 +39,7 @@ rota.post("/", async (req, res)=>{
 
             }catch(error){
             console.error("Erro ao criar tópico",error);
-            res.status(500).json({error:"Erro ao criar topico"})//
+            res.status(500).json({error:"Erro ao criar topico"});//
     }
 });
 // rota.post("/", async (req, res)=>{
