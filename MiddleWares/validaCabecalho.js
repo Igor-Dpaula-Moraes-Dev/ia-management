@@ -2,7 +2,7 @@
 export default function verificaHeader(req,res,next){
 
     const authorization = req.headers.authorization;
-    const openaiBeta = req.headers["OpenAi-Beta"];//captura o cabeçalho Openai-Beta
+    const openaiBeta = req.headers["openai-beta"];//captura o cabeçalho Openai-Beta
 
 if (!authorization || !authorization.startsWith("Bearer ")) {
   return res.status(400).json({ error: "API Key não fornecida ou inválida no cabeçalho." });
