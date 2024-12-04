@@ -17,7 +17,8 @@ function getOpenAiInstance(apiKey) {
   return new OpenAI({
     apiKey: apiKey,
     headers: {
-      Authorization: `Bearer ${apiKey}` // Define o cabeçalho dinamicamente
+      Authorization: `Bearer ${apiKey}`, // Define o cabeçalho dinamicamente
+      "OpenAI-Beta": "assistants=v2",//Cabeçalho Beta para suporte a `assistants=v2`
     }
   });
 }

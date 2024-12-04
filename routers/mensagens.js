@@ -8,7 +8,7 @@ import verificaHeader from "../MiddleWares/validaCabecalho.js";
 
 rotaMessage.get("/:topicoID", verificaHeader, async (req, res)=>{
     const {topicoID}= req.params;//obtem o topicoId atraves da url
-    const apiKey = req.apiKey;//recuperaapikey do mo middleware
+    const apiKey = req.apiKey;//recupera apikey do middleware
 
     if (!topicoID) {
         return res.status(400).json({ error: "O ID do tópico é obrigatório." });
