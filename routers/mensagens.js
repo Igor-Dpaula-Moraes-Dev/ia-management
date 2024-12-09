@@ -17,7 +17,10 @@ rotaMessage.get("/:topicoID", verificaHeader, async (req, res)=>{
 
     try{
         const response = await MensagensController.listaMessage(topicoID,apiKey);
-        res.status(200).json({ message: "Mensagens encontradas", data: response });
+        res.status(200).json({
+           message: "Mensagens encontradas",
+           data: response
+          });
 
     }catch (error){
         console.error("Erro ao Buscar novas mensagens",error);
@@ -56,8 +59,8 @@ rotaMessage.post("/:topicoID", verificaHeader, async (req, res)=>{
       
             res.status(201).json({
             message: "Mensagem criada e executada com sucesso",
-            userMessage: newMessage,
-            assistantResponse: respostaAssistente,
+            userMessage: newMessage.trim(),
+            assistantResponse: respostaAssistente.trim(),
           });
 
         } catch (error){

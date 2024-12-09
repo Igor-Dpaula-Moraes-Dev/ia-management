@@ -33,7 +33,7 @@ getOpenAiInstance(apiKey) {
 }
 
 
-async criarTopico (content ,assistantId,apiKey){
+async criarTopico (content ,assistantId, apiKey){
 try{
   const openai = this.getOpenAiInstance(apiKey); // Instância criada dinamicamente
 

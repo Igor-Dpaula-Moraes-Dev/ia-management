@@ -24,7 +24,10 @@ rota.post("/", verificaHeader, async (req, res)=>{
     try{
          const {content,assistant_id,} = req.body;
          const apiKey = req.apiKey//Recupera Middleware
-     
+        
+         if (!content){
+            return res.status(400).json({erro:"O conteudo da mensagem não pode ser vazio"});
+         }
        
          
         if(!assistant_id){

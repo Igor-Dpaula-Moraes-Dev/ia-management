@@ -39,7 +39,7 @@ async function listaMessage(topicoID,apiKey) {
     // Extrai e formata `role` e `content[].text.value` de cada mensagem
     const mensagensFormatadas = threadMessages.data.map(mensagem => ({
       role: mensagem.role,
-      content: mensagem.content[0].text.value // Acessa o texto em `content[].text.value`
+      content: mensagem.content[0].text.value.trim() // Acessa o texto em `content[].text.value`
     }));
    // console.log(threadMessages);
     console.log(mensagensFormatadas);
@@ -70,7 +70,7 @@ async function listaMessage(topicoID,apiKey) {
     }
   );
    console.log("Resposta da API",threadMessages);
-   const  perguntaContent =  threadMessages?.content?.[0]?.text?.value; // Extrai `content.value`
+   const  perguntaContent =  threadMessages?.content?.[0]?.text?.value.trim(); // Extrai `content.value`
   // Extrai `content.value` da resposta da mensagem criada
   console.log("console no conteudo da pergunta",perguntaContent)
   return { 
