@@ -72,11 +72,13 @@ async function listaMessage(topicoID,apiKey) {
    console.log("Resposta da API",threadMessages);
    const  perguntaContent =  threadMessages?.content?.[0]?.text?.value.trim(); // Extrai `content.value`
   // Extrai `content.value` da resposta da mensagem criada
-  console.log("console no conteudo da pergunta",perguntaContent)
-  return { 
-    message: "Mensagem criada com sucesso",
-    content: perguntaContent
-  };
+  console.log("console no conteudo da pergunta",perguntaContent);
+  console.log("Mensagem criada com sucesso");
+  // return { 
+  //   message: "Mensagem criada com sucesso",
+  //   content: perguntaContent
+  // };
+  return perguntaContent || "Erro conteúdo vazio na resposta da API.";
 
   
 
